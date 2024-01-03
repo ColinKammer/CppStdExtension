@@ -1,3 +1,5 @@
+#pragma once
+
 namespace cjk::raii
 {
 
@@ -35,11 +37,11 @@ namespace cjk::raii
         }
 
         Lifetime(const Lifetime &) = delete;
-        Lifetime &operator=(const Lifetime &) = delete
+        Lifetime &operator=(const Lifetime &) = delete;
 
-            Lifetime(Lifetime && other) noexcept
+        Lifetime(Lifetime &&other) noexcept
             : m_func(std::move(other.m_func)),
-                 m_armed(true)
+              m_armed(true)
         {
             other.m_armed = false;
         }
