@@ -3,7 +3,7 @@
 namespace cjk::raii
 {
 
-    struct DeletedCopy
+    struct DeletedCopy final
     {
         DeletedCopy() = default;
 
@@ -15,7 +15,7 @@ namespace cjk::raii
     };
 
     template <typename FuncT>
-    struct Lifetime
+    struct Lifetime final
     {
         FuncT m_func;
         bool m_armed;
