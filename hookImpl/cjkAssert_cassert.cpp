@@ -1,8 +1,7 @@
-#pragma once
 #include <iostream>
 #include <cassert>
 
-#include "CjkAssert.h"
+#include "cjkAssert.h"
 
 namespace cjk
 {
