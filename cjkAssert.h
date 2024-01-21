@@ -2,7 +2,7 @@
 #include "macroUtil.h"
 
 namespace cjk {
-void on_failed_assertion(const char* assertionMessage, const char* srcFile, unsigned srcLine);
+[[noreturn]] void on_failed_assertion(const char* assertionMessage, const char* srcFile, unsigned srcLine);
 
 }
 
