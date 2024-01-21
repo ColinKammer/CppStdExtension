@@ -24,6 +24,7 @@ LogTransaction::~LogTransaction()
     std::cerr << std::setfill('0') << std::setw(6) << (epochMs % 1'000'000);
     std::cerr << cst->srcLocation << " #@";
     std::cerr << cst->message << std::endl;
+    delete cst;
 }
 
 LogTransaction& LogTransaction::Location(const char* file, size_t lineNum)
