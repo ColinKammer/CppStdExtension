@@ -40,16 +40,16 @@ const TargetT& assert_downcast(const char* srcFile, unsigned srcLine, const Sour
 
 #define CJK_ASSERT(expr, assertionMessage) \
     if (!(expr))                           \
-        on_failed_assertion(assertionMessage, CJK_STRINGIFY(__FILE__), __LINE__);
+        cjk::on_failed_assertion(assertionMessage, CJK_STRINGIFY(__FILE__), __LINE__);
 
 #define CJK_ASSERT_UNREACHABLE(assertionMessage) \
-    on_failed_assertion(assertionMessage, CJK_STRINGIFY(__FILE__), __LINE__);
+    cjk::on_failed_assertion(assertionMessage, CJK_STRINGIFY(__FILE__), __LINE__);
 
-#define CJK_ASSERT_NOTHROW(expr, assertionMessage)                                \
-    try {                                                                         \
-        cjk::impl::ignore_withoutHeader(expr);                                                             \
-    } catch (...) {                                                               \
-        on_failed_assertion(assertionMessage, CJK_STRINGIFY(__FILE__), __LINE__); \
+#define CJK_ASSERT_NOTHROW(expr, assertionMessage)                                     \
+    try {                                                                              \
+        cjk::impl::ignore_withoutHeader(expr);                                         \
+    } catch (...) {                                                                    \
+        cjk::on_failed_assertion(assertionMessage, CJK_STRINGIFY(__FILE__), __LINE__); \
     }
 
 #define CJK_ASSERT_DOWNCAST(targetType, toCast) \
