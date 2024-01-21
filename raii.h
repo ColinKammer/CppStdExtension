@@ -1,59 +1,61 @@
 #pragma once
+#include <functional>
 
-namespace cjk::raii
-{
+namespace cjk::raii {
 
-    struct DeletedCopy final
+struct DeletedCopy final {
+    DeletedCopy() = default;
+
+    DeletedCopy(const DeletedCopy&) = delete;
+    DeletedCopy& operator=(const DeletedCopy&) = delete;
+
+    DeletedCopy(DeletedCopy&&) = default;
+    DeletedCopy& operator=(DeletedCopy&&) = default;
+};
+
+template <typename FuncT>
+struct Lifetime final {
+    FuncT m_func;
+    bool m_armed;
+
+    Lifetime()
+        : m_func()
+        , m_armed(false)
     {
-        DeletedCopy() = default;
+    }
 
-        DeletedCopy(const DeletedCopy &) = delete;
-        DeletedCopy &operator=(const DeletedCopy &) = delete;
-
-        DeletedCopy(DeletedCopy &&) = default;
-        DeletedCopy &operator=(DeletedCopy &&) = default;
-    };
-
-    template <typename FuncT>
-    struct Lifetime final
+    explicit Lifetime(FuncT&& func)
+        : m_func(std::move(func))
+        , m_armed(true)
     {
-        FuncT m_func;
-        bool m_armed;
+    }
 
-        Lifetime()
-            : m_func(), m_armed(false)
-        {
-        }
+    ~Lifetime()
+    {
+        if (m_armed)
+            m_func();
+    }
 
-        explicit Lifetime(FuncT &&func)
-            : m_func(std::move(func)), m_armed(true)
-        {
-        }
+    Lifetime(const Lifetime&) = delete;
+    Lifetime& operator=(const Lifetime&) = delete;
 
-        ~Lifetime()
-        {
-            if (m_armed)
-                m_func();
-        }
+    Lifetime(Lifetime&& other) noexcept
+        : m_func(std::move(other.m_func))
+        , m_armed(true)
+    {
+        other.m_armed = false;
+    }
+    Lifetime& operator=(Lifetime&& other) noexcept
+    {
+        if (m_armed)
+            m_func();
+        m_func = std::move(other.m_func);
+        m_armed = std::move(other.m_armed);
+        other.m_armed = false;
+        return *this;
+    }
+};
 
-        Lifetime(const Lifetime &) = delete;
-        Lifetime &operator=(const Lifetime &) = delete;
-
-        Lifetime(Lifetime &&other) noexcept
-            : m_func(std::move(other.m_func)),
-              m_armed(true)
-        {
-            other.m_armed = false;
-        }
-        Lifetime &operator=(Lifetime &&other) noexcept
-        {
-            if (m_armed)
-                m_func();
-            m_func = std::move(other.m_func);
-            m_armed = std::move(other.m_armed);
-            other.m_armed = false;
-            return *this;
-        }
-    };
+using TypeEreasedLifetime = Lifetime<std::function<void(void)>>;
 
 }
