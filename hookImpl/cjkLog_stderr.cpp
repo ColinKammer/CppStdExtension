@@ -7,13 +7,16 @@
 namespace cjk {
 
 struct ImplData {
+    LogLevel logLevel;
     std::string srcLocation;
     std::string message;
 };
 
-LogTransaction::LogTransaction()
+LogTransaction::LogTransaction(LogLevel l)
     : m_implData(new ImplData())
 {
+    auto* cst = static_cast<ImplData*>(m_implData);
+    cst->logLevel = l;
 }
 
 LogTransaction::~LogTransaction()
@@ -21,6 +24,7 @@ LogTransaction::~LogTransaction()
     auto* cst = static_cast<ImplData*>(m_implData);
     auto now = std::chrono::steady_clock::now();
     auto epochMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    std::cerr << static_cast<char>(cst->logLevel) << " ";
     std::cerr << std::setfill('0') << std::setw(6) << (epochMs % 1'000'000);
     std::cerr << cst->srcLocation << " #@";
     std::cerr << cst->message << std::endl;

@@ -5,12 +5,20 @@
 #include "raii.h"
 
 namespace cjk {
+
+enum class LogLevel : char {
+    Debug = 'D',
+    Info = 'I',
+    Error = 'E',
+    MachineRead = 'M'
+};
+
 class LogTransaction final {
     void* m_implData; // no std::any to avoid overhead for small systems
     raii::DeletedCopy m_noCopy;
 
 public:
-    LogTransaction();
+    LogTransaction(LogLevel);
     ~LogTransaction();
 
     LogTransaction& Location(const char* file, size_t lineNum);
@@ -21,7 +29,9 @@ public:
     LogTransaction& operator()(int);
 };
 
-[[nodiscard]] inline LogTransaction log() { return LogTransaction(); }
+inline LogTransaction logDebug() { return LogTransaction(LogLevel::Debug); }
+inline LogTransaction logInfo() { return LogTransaction(LogLevel::Info); }
+inline LogTransaction logError() { return LogTransaction(LogLevel::Error); }
 
 }
 
