@@ -13,6 +13,16 @@ struct DeletedCopy final {
     DeletedCopy& operator=(DeletedCopy&&) = default;
 };
 
+struct DeletedCopyAndMove final {
+    DeletedCopyAndMove() = default;
+
+    DeletedCopyAndMove(const DeletedCopyAndMove&) = delete;
+    DeletedCopyAndMove& operator=(const DeletedCopyAndMove&) = delete;
+
+    DeletedCopyAndMove(DeletedCopyAndMove&&) = delete;
+    DeletedCopyAndMove& operator=(DeletedCopyAndMove&&) = delete;
+};
+
 template <typename FuncT>
 struct Lifetime final {
     FuncT m_func;
