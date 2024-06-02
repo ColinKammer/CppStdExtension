@@ -64,6 +64,10 @@ struct Lifetime final {
         other.m_armed = false;
         return *this;
     }
+
+    void Disarm() noexcept{
+        m_armed = false;
+    }
 };
 
 using TypeEreasedLifetime = Lifetime<std::function<void(void)>>;
